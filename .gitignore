@@ -1,0 +1,205 @@
+# ===========================================
+# Node.js
+# ===========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# ===========================================
+# 环境变量和配置文件
+# ===========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===========================================
+# 日志文件
+# ===========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===========================================
+# 输出文件
+# ===========================================
+output/
+*.mp3
+*.wav
+*.m4a
+*.txt
+*.json
+
+# 临时文件
+temp/
+tmp/
+*.tmp
+*.temp
+
+# ===========================================
+# 操作系统
+# ===========================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================================
+# 编辑器和IDE
+# ===========================================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.swp
+*.swo
+*~
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.swn
+
+# ===========================================
+# 构建和部署
+# ===========================================
+dist/
+build/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+
+# ===========================================
+# 测试
+# ===========================================
+.nyc_output/
+coverage/
+*.lcov
+
+# ===========================================
+# 依赖管理
+# ===========================================
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ===========================================
+# 项目特定文件
+# ===========================================
+# 音频文件
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.ogg
+*.flac
+
+# 文本输出
+summaries/
+transcripts/
+
+# 数据库备份
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+
+# API 响应缓存
+cache/
+.cache/
+
+# 错误报告
+error-reports/
+crash-reports/
+
+# ===========================================
+# 安全相关
+# ===========================================
+# 私钥和证书
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# 备份文件
+*.bak
+*.backup
+*.old
+
+# ===========================================
+# 其他
+# ===========================================
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 文档生成
+docs/build/
+
+# 性能分析
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+
+# 调试文件
+*.tsbuildinfo
+
+# Optional REPL history
+.node_repl_history

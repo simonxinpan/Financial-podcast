@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财报播客 - 智能财报解读服务</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            margin: -2rem 0 0 0;
+            border-radius: 20px 20px 0 0;
+            padding: 3rem 0;
+            min-height: 80vh;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            align-self: end;
+        }
+
+        .search-btn:hover {
+            background: #5a6fd8;
+        }
+
+        /* Podcast Grid */
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .podcast-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .podcast-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .podcast-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .podcast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .company-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .company-logo {
+            width: 48px;
+            height: 48px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #e9ecef;
+            flex-shrink: 0;
+        }
+        
+        .company-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .company-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+            color: #333;
+        }
+
+        .company-details p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .quarter-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .podcast-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .podcast-summary {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .podcast-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .podcast-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+        }
+
+        .podcast-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: 2px solid #e9ecef;
+            color: #666;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Features Section */
+        .features {
+            background: #f8f9fa;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                align-self: stretch;
+            }
+
+            .podcast-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <i class="fas fa-podcast"></i>
+                    财报播客
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#podcasts">播客</a></li>
+                    <li><a href="#companies">公司</a></li>
+                    <li><a href="#about">关于</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>智能财报播客</h1>
+            <p>1小时财报，5分钟精华</p>
+            <a href="#podcasts" class="cta-button">
+                <i class="fas fa-play"></i>
+                开始收听
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Search Section -->
+            <section class="search-section">
+                <form class="search-form">
+                    <div class="form-group">
+                        <label for="ticker">股票代码</label>
+                        <input type="text" id="ticker" placeholder="如: AAPL, MSFT, GOOGL" value="AAPL">
+                    </div>
+                    <div class="form-group">
+                        <label for="year">年份</label>
+                        <select id="year">
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quarter">季度</label>
+                        <select id="quarter">
+                            <option value="Q4">Q4</option>
+                            <option value="Q3">Q3</option>
+                            <option value="Q2">Q2</option>
+                            <option value="Q1">Q1</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        搜索播客
+                    </button>
+                </form>
+            </section>
+
+            <!-- Loading Animation -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>正在生成播客，请稍候...</p>
+            </div>
+
+            <!-- Podcast Grid -->
+            <section class="podcast-grid" id="podcastGrid">
+                <!-- Apple Inc. -->
+                <div class="podcast-card">
+                    <div class="company-info">
+                        <div class="company-logo">
+                            <img src="https://logo.clearbit.com/apple.com" alt="Apple" onerror="this.style.display='none'">
+                        </div>
+                        <div class="company-details">
+                            <h3>苹果公司 (AAPL)</h3>
+                            <div class="quarter-badge">2024 Q3</div>
+                        </div>
+                    </div>
+                    <div class="podcast-content">
+                        <h4 style="color: #667eea; font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600;">📈 iPhone销售强劲，AI功能引领下轮增长</h4>
+                        <div class="podcast-summary">
+                            苹果Q3财报超预期，iPhone销售强劲，服务业务持续增长。管理层对AI功能充满信心，预计将推动下一轮增长周期。现金流稳健，股东回报政策保持积极...
+                        </div>
+                        <div class="podcast-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>5分32秒</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2024-08-02</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-language"></i>
+                                <span>中文</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podcast-controls">
+                        <button class="play-button">
+                            <i class="fas fa-play"></i>
+                            播放
+                        </button>
+                        <div class="podcast-actions">
+                            <button class="action-btn" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" title="收藏">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Microsoft -->
+                <div class="podcast-card">
+                    <div class="company-info">
+                        <div class="company-logo">
+                            <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" onerror="this.style.display='none'">
+                        </div>
+                        <div class="company-details">
+                            <h3>微软公司 (MSFT)</h3>
+                            <div class="quarter-badge">2024 Q3</div>
+                        </div>
+                    </div>
+                    <div class="podcast-content">
+                        <h4 style="color: #667eea; font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600;">☁️ Azure云计算加速，AI Copilot贡献显著</h4>
+                        <div class="podcast-summary">
+                            微软Q3业绩亮眼，云计算Azure增长加速，AI Copilot产品线贡献显著。Office 365订阅用户持续增长，游戏业务表现稳定。管理层上调全年指引...
+                        </div>
+                        <div class="podcast-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>6分18秒</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2024-07-25</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-language"></i>
+                                <span>中文</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podcast-controls">
+                        <button class="play-button">
+                            <i class="fas fa-play"></i>
+                            播放
+                        </button>
+                        <div class="podcast-actions">
+                            <button class="action-btn" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" title="收藏">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google -->
+                <div class="podcast-card">
+                    <div class="company-info">
+                        <div class="company-logo">
+                            <img src="https://logo.clearbit.com/google.com" alt="Google" onerror="this.style.display='none'">
+                        </div>
+                        <div class="company-details">
+                            <h3>谷歌公司 (GOOGL)</h3>
+                            <div class="quarter-badge">2024 Q2</div>
+                        </div>
+                    </div>
+                    <div class="podcast-content">
+                        <h4 style="color: #667eea; font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600;">🔍 搜索广告稳增，YouTube和云计算双引擎</h4>
+                        <div class="podcast-summary">
+                            谷歌Q2财报显示搜索广告收入稳定增长，YouTube广告表现强劲，云计算业务加速发展。AI技术投入持续加大，Bard和搜索AI功能获得积极反馈...
+                        </div>
+                        <div class="podcast-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>5分45秒</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2024-07-24</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-language"></i>
+                                <span>中文</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podcast-controls">
+                        <button class="play-button">
+                            <i class="fas fa-play"></i>
+                            播放
+                        </button>
+                        <div class="podcast-actions">
+                            <button class="action-btn" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" title="收藏">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 特斯拉财报卡片 -->
+                <div class="podcast-card">
+                    <div class="company-info">
+                        <div class="company-logo">
+                            <img src="https://logo.clearbit.com/tesla.com" alt="Tesla" onerror="this.style.display='none'">
+                        </div>
+                        <div class="company-details">
+                            <h3>特斯拉 (TSLA)</h3>
+                            <div class="quarter-badge">2024 Q2</div>
+                        </div>
+                    </div>
+                    <div class="podcast-content">
+                        <h4 style="color: #667eea; font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600;">🚗 电动车销量回升，自动驾驶技术突破</h4>
+                        <div class="podcast-summary">
+                            特斯拉Q2财报显示电动车交付量环比增长，Model 3和Model Y销量稳定。FSD自动驾驶技术取得重要进展，Robotaxi计划加速推进，储能业务表现亮眼...
+                        </div>
+                        <div class="podcast-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>6分12秒</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2024-07-23</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-language"></i>
+                                <span>中文</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podcast-controls">
+                        <button class="play-button">
+                            <i class="fas fa-play"></i>
+                            播放
+                        </button>
+                        <div class="podcast-actions">
+                            <button class="action-btn" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" title="收藏">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 亚马逊财报卡片 -->
+                <div class="podcast-card">
+                    <div class="company-info">
+                        <div class="company-logo">
+                            <img src="https://logo.clearbit.com/amazon.com" alt="Amazon" onerror="this.style.display='none'">
+                        </div>
+                        <div class="company-details">
+                            <h3>亚马逊 (AMZN)</h3>
+                            <div class="quarter-badge">2024 Q2</div>
+                        </div>
+                    </div>
+                    <div class="podcast-content">
+                        <h4 style="color: #667eea; font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600;">📦 电商业务稳健，AWS云服务持续领先</h4>
+                        <div class="podcast-summary">
+                            亚马逊Q2财报显示电商业务保持稳定增长，Prime会员数量创新高。AWS云服务收入强劲，AI服务需求旺盛，广告业务成为新增长点...
+                        </div>
+                        <div class="podcast-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>5分58秒</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2024-08-01</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-language"></i>
+                                <span>中文</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podcast-controls">
+                        <button class="play-button">
+                            <i class="fas fa-play"></i>
+                            播放
+                        </button>
+                        <div class="podcast-actions">
+                            <button class="action-btn" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" title="收藏">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 英伟达财报卡片 -->
+                <div class="podcast-card">
+                    <div class="company-info">
+                        <div class="company-logo">
+                            <img src="https://logo.clearbit.com/nvidia.com" alt="NVIDIA" onerror="this.style.display='none'">
+                        </div>
+                        <div class="company-details">
+                            <h3>英伟达 (NVDA)</h3>
+                            <div class="quarter-badge">2024 Q2</div>
+                        </div>
+                    </div>
+                    <div class="podcast-content">
+                        <h4 style="color: #667eea; font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600;">🤖 AI芯片需求爆发，数据中心业务翻倍增长</h4>
+                        <div class="podcast-summary">
+                            英伟达Q2财报创历史新高，AI芯片需求持续爆发式增长。数据中心业务收入同比增长154%，H100和A100芯片供不应求，未来AI基础设施投资前景广阔...
+                        </div>
+                        <div class="podcast-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>6分35秒</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2024-08-23</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-language"></i>
+                                <span>中文</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podcast-controls">
+                        <button class="play-button">
+                            <i class="fas fa-play"></i>
+                            播放
+                        </button>
+                        <div class="podcast-actions">
+                            <button class="action-btn" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="分享">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="action-btn" title="收藏">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI智能摘要</h3>
+                    <p>使用先进的AI技术，将冗长的财报会议转化为结构化的核心洞察，确保信息准确性和专业性。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>高效时间管理</h3>
+                    <p>5分钟获取1小时会议精华，为忙碌的投资者节省宝贵时间，提高信息获取效率。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>中文本土化</h3>
+                    <p>专为北美华人投资者设计，提供高质量的中文解读，消除语言障碍，降低理解门槛。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>自动化更新</h3>
+                    <p>财报发布后24小时内自动生成播客，确保信息时效性，让您第一时间获取最新财报解读。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 财报播客. 专为北美华人投资者打造的智能财报解读服务.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">免责声明：本服务提供的内容仅供参考，不构成投资建议。投资有风险，决策需谨慎。</p>
+        </div>
+    </footer>
+
+    <script>
+        // 搜索表单提交处理
+        document.querySelector('.search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const ticker = document.getElementById('ticker').value;
+            const year = document.getElementById('year').value;
+            const quarter = document.getElementById('quarter').value;
+            
+            // 显示加载动画
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('podcastGrid').style.display = 'none';
+            
+            // 模拟API调用
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('podcastGrid').style.display = 'grid';
+                
+                // 这里可以添加实际的API调用逻辑
+                console.log(`搜索播客: ${ticker} ${year} ${quarter}`);
+            }, 2000);
+        });
+        
+        // 播放按钮点击处理
+        document.querySelectorAll('.play-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                const text = this.querySelector('span') || this.childNodes[this.childNodes.length - 1];
+                
+                if (icon.classList.contains('fa-play')) {
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                    this.innerHTML = '<i class="fas fa-pause"></i>暂停';
+                } else {
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                    this.innerHTML = '<i class="fas fa-play"></i>播放';
+                }
+            });
+        });
+        
+        // 收藏按钮点击处理
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-heart')) {
+                    if (icon.style.color === 'red') {
+                        icon.style.color = '';
+                        this.title = '收藏';
+                    } else {
+                        icon.style.color = 'red';
+                        this.title = '取消收藏';
+                    }
+                }
+            });
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

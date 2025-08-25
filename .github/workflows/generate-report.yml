@@ -1,0 +1,84 @@
+name: Generate Earnings Podcast
+
+on:
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: 'Stock ticker symbol (e.g., AAPL)'
+        required: true
+        type: string
+      year:
+        description: 'Year (e.g., 2024)'
+        required: true
+        type: string
+      quarter:
+        description: 'Quarter (1, 2, 3, or 4)'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+      language:
+        description: 'Output language'
+        required: false
+        type: choice
+        default: 'zh-CN'
+        options:
+          - 'zh-CN'
+          - 'en-US'
+
+jobs:
+  generate-podcast:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Generate earnings podcast
+      env:
+        FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        COZE_API_KEY: ${{ secrets.COZE_API_KEY }}
+        NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+        VERCEL_BLOB_READ_WRITE_TOKEN: ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
+      run: |
+        node _scripts/generate-report.mjs \
+          --ticker="${{ github.event.inputs.ticker }}" \
+          --year="${{ github.event.inputs.year }}" \
+          --quarter="${{ github.event.inputs.quarter }}" \
+          --language="${{ github.event.inputs.language }}"
+          
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: earnings-podcast-${{ github.event.inputs.ticker }}-${{ github.event.inputs.year }}Q${{ github.event.inputs.quarter }}
+        path: |
+          output/
+          logs/
+        retention-days: 30
+        
+    - name: Comment on workflow run
+      if: success()
+      run: |
+        echo "✅ Earnings podcast generated successfully for ${{ github.event.inputs.ticker }} ${{ github.event.inputs.year }}Q${{ github.event.inputs.quarter }}"
+        echo "📊 Check the artifacts for the generated podcast and summary"
+        
+    - name: Handle failure
+      if: failure()
+      run: |
+        echo "❌ Failed to generate earnings podcast for ${{ github.event.inputs.ticker }} ${{ github.event.inputs.year }}Q${{ github.event.inputs.quarter }}"
+        echo "🔍 Check the logs for error details"
+        exit 1
