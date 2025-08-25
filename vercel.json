@@ -1,0 +1,42 @@
+{
+  "version": 2,
+
+  "builds": [
+    {
+      "src": "prototype/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/prototype/index.html"
+    }
+  ],
+
+  "regions": ["iad1"],
+  "env": {},
+  "build": {
+    "env": {}
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/prototype/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
