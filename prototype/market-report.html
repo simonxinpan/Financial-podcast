@@ -2,8 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美股盘后总结报告 - Verified Investing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <title>美股盘后总结报告 - 专业市场分析</title>Verified Investing</title>
     <style>
         * {
             margin: 0;
@@ -268,21 +271,174 @@
             color: #721c24;
         }
 
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .market-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .key-points {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
+                margin: 0;
+            }
+            
+            .header {
+                padding: 20px 0;
+                text-align: center;
             }
             
             .header h1 {
-                font-size: 2rem;
+                font-size: 28px;
+                line-height: 1.2;
+                margin-bottom: 8px;
+            }
+            
+            .header .subtitle {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            
+            .header .date-time {
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
             }
             
             .market-overview {
                 grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .analysis-section {
+                margin-bottom: 30px;
+            }
+            
+            .section-title {
+                font-size: 22px;
+                margin-bottom: 20px;
+                text-align: center;
             }
             
             .key-points {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .point-card {
+                padding: 20px;
+            }
+            
+            .point-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .point-description {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            
+            .chart-container {
+                height: 250px;
+                margin-bottom: 20px;
+            }
+            
+            /* 移动端图表优化 */
+            #sp500-chart, #volume-chart, #risk-gauge {
+                height: 200px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header .subtitle {
+                font-size: 13px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .point-card {
+                padding: 15px;
+            }
+            
+            .point-title {
+                font-size: 15px;
+            }
+            
+            .point-description {
+                font-size: 13px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            #sp500-chart, #volume-chart, #risk-gauge {
+                height: 180px;
+            }
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .card, .point-card {
+                transition: transform 0.2s ease;
+            }
+            
+            .card:active, .point-card:active {
+                transform: scale(0.98);
+            }
+            
+            /* 增大触摸目标 */
+            .card, .point-card {
+                min-height: 120px;
+            }
+        }
+        
+        /* 横屏模式优化 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .market-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .key-points {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header {
+                padding: 15px 0;
+            }
+            
+            .header h1 {
+                font-size: 26px;
             }
         }
     </style>
