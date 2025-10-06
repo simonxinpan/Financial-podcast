@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <title>播客版 - 美股盘后总结报告</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-3px);
+        }
+
+        .podcast-player {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .episode-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .episode-cover {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffffff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .episode-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .episode-date {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+        }
+
+        .audio-player {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .time-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .current-time,
+        .total-time {
+            font-size: 0.9rem;
+            color: #b8c5d6;
+            white-space: nowrap;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .speed-control {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .speed-btn {
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .speed-btn.active {
+            background: rgba(0, 212, 255, 0.3);
+            border-color: #00d4ff;
+        }
+
+        .episode-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .content-section {
+            margin-bottom: 25px;
+        }
+
+        .content-section h3 {
+            color: #00d4ff;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .content-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content-section li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b8c5d6;
+        }
+
+        .content-section li:last-child {
+            border-bottom: none;
+        }
+
+        .timestamp {
+            color: #00d4ff;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .timestamp:hover {
+            text-decoration: underline;
+        }
+
+        .related-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .link-btn {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #ffffff;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .link-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .episode-cover {
+                width: 150px;
+                height: 150px;
+                font-size: 2rem;
+            }
+
+            .player-controls {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .time-info {
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            .volume-control {
+                order: 2;
+            }
+
+            .related-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-btn {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 20px;
+                align-self: flex-start;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .podcast-player {
+                padding: 20px;
+            }
+
+            .episode-cover {
+                width: 120px;
+                height: 120px;
+                font-size: 1.5rem;
+            }
+
+            .episode-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="daily-summary.html" class="back-btn">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            返回汇总
+        </a>
+
+        <header class="header">
+            <h1>播客版 - 美股盘后总结</h1>
+            <p>专业音频解读，随时随地收听</p>
+        </header>
+
+        <div class="podcast-player">
+            <div class="episode-info">
+                <div class="episode-cover">🎧</div>
+                <h2 class="episode-title" id="episode-title">正在加载...</h2>
+                <p class="episode-date" id="episode-date">-</p>
+            </div>
+
+            <div class="audio-player">
+                <div class="player-controls">
+                    <button class="play-btn" id="play-btn">▶</button>
+                    <div class="time-info">
+                        <span class="current-time" id="current-time">0:00</span>
+                        <div class="progress-bar" id="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span class="total-time" id="total-time">0:00</span>
+                    </div>
+                    <div class="volume-control">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70">
+                    </div>
+                </div>
+
+                <div class="speed-control">
+                    <button class="speed-btn" data-speed="0.75">0.75x</button>
+                    <button class="speed-btn active" data-speed="1">1x</button>
+                    <button class="speed-btn" data-speed="1.25">1.25x</button>
+                    <button class="speed-btn" data-speed="1.5">1.5x</button>
+                    <button class="speed-btn" data-speed="2">2x</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="episode-content">
+            <div class="content-section">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    本期要点
+                </h3>
+                <ul id="key-points">
+                    <li><span class="timestamp" data-time="0">00:00</span>市场开盘概况与主要指数表现</li>
+                    <li><span class="timestamp" data-time="180">03:00</span>重点个股分析与技术面解读</li>
+                    <li><span class="timestamp" data-time="360">06:00</span>加密货币市场动态</li>
+                    <li><span class="timestamp" data-time="540">09:00</span>大宗商品价格走势</li>
+                    <li><span class="timestamp" data-time="720">12:00</span>明日交易策略与风险提示</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h3>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-5H19V4h-3V2H8v2H5v2h1.5v14h11V6z"/>
+                    </svg>
+                    重要数据
+                </h3>
+                <ul id="important-data">
+                    <li>S&P 500: +0.85% (4,567.23)</li>
+                    <li>NASDAQ: +1.23% (14,234.56)</li>
+                    <li>道琼斯: +0.67% (35,678.90)</li>
+                    <li>VIX恐慌指数: 18.45 (-2.3%)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="related-links">
+            <a href="market-report.html" class="link-btn">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                查看图文版
+            </a>
+            <a href="#" class="link-btn" id="youtube-link">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                观看原视频
+            </a>
+            <a href="daily-summary.html" class="link-btn">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/>
+                </svg>
+                更多报告
+            </a>
+        </div>
+    </div>
+
+    <script>
+        class PodcastPlayer {
+            constructor() {
+                this.isPlaying = false;
+                this.currentTime = 0;
+                this.duration = 900; // 15分钟示例
+                this.volume = 0.7;
+                this.playbackRate = 1;
+                this.init();
+            }
+
+            init() {
+                this.loadEpisodeInfo();
+                this.setupEventListeners();
+                this.updateDisplay();
+            }
+
+            loadEpisodeInfo() {
+                // 从URL参数获取视频ID
+                const urlParams = new URLSearchParams(window.location.search);
+                const videoId = urlParams.get('video') || 'video1';
+                
+                // 模拟加载剧集信息
+                const episodeInfo = {
+                    title: 'Major Levels, Targets And Forecasts Revealed For Gold, Silver, Platinum And Palladium',
+                    date: '2024年1月15日',
+                    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                };
+
+                document.getElementById('episode-title').textContent = episodeInfo.title;
+                document.getElementById('episode-date').textContent = episodeInfo.date;
+                document.getElementById('youtube-link').href = episodeInfo.youtubeUrl;
+            }
+
+            setupEventListeners() {
+                // 播放/暂停按钮
+                document.getElementById('play-btn').addEventListener('click', () => {
+                    this.togglePlay();
+                });
+
+                // 进度条
+                document.getElementById('progress-bar').addEventListener('click', (e) => {
+                    const rect = e.target.getBoundingClientRect();
+                    const percent = (e.clientX - rect.left) / rect.width;
+                    this.seekTo(percent * this.duration);
+                });
+
+                // 音量控制
+                document.getElementById('volume-slider').addEventListener('input', (e) => {
+                    this.setVolume(e.target.value / 100);
+                });
+
+                // 播放速度
+                document.querySelectorAll('.speed-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.setPlaybackRate(parseFloat(e.target.dataset.speed));
+                    });
+                });
+
+                // 时间戳跳转
+                document.querySelectorAll('.timestamp').forEach(timestamp => {
+                    timestamp.addEventListener('click', (e) => {
+                        const time = parseInt(e.target.dataset.time);
+                        this.seekTo(time);
+                    });
+                });
+            }
+
+            togglePlay() {
+                this.isPlaying = !this.isPlaying;
+                const playBtn = document.getElementById('play-btn');
+                
+                if (this.isPlaying) {
+                    playBtn.textContent = '⏸';
+                    this.startPlayback();
+                } else {
+                    playBtn.textContent = '▶';
+                    this.stopPlayback();
+                }
+            }
+
+            startPlayback() {
+                this.playbackInterval = setInterval(() => {
+                    this.currentTime += this.playbackRate;
+                    if (this.currentTime >= this.duration) {
+                        this.currentTime = this.duration;
+                        this.togglePlay();
+                    }
+                    this.updateDisplay();
+                }, 1000);
+            }
+
+            stopPlayback() {
+                if (this.playbackInterval) {
+                    clearInterval(this.playbackInterval);
+                }
+            }
+
+            seekTo(time) {
+                this.currentTime = Math.max(0, Math.min(time, this.duration));
+                this.updateDisplay();
+            }
+
+            setVolume(volume) {
+                this.volume = Math.max(0, Math.min(1, volume));
+            }
+
+            setPlaybackRate(rate) {
+                this.playbackRate = rate;
+            }
+
+            updateDisplay() {
+                // 更新时间显示
+                document.getElementById('current-time').textContent = this.formatTime(this.currentTime);
+                document.getElementById('total-time').textContent = this.formatTime(this.duration);
+
+                // 更新进度条
+                const progress = (this.currentTime / this.duration) * 100;
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+            }
+
+            formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // 初始化播放器
+        document.addEventListener('DOMContentLoaded', () => {
+            new PodcastPlayer();
+        });
+    </script>
+</body>
+</html>

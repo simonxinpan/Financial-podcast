@@ -8,23 +8,35 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/market-report.html",
-      "destination": "/prototype/market-report.html"
-    },
-    {
-      "source": "/chart-components.js",
-      "destination": "/prototype/chart-components.js"
-    },
-    {
-      "source": "/",
-      "destination": "/prototype/index.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/prototype/$1"
-    }
-  ],
+        {
+            "source": "/market-report.html",
+            "destination": "/prototype/market-report.html"
+        },
+        {
+            "source": "/daily-summary.html",
+            "destination": "/prototype/daily-summary.html"
+        },
+        {
+            "source": "/podcast-player.html",
+            "destination": "/prototype/podcast-player.html"
+        },
+        {
+            "source": "/chart-components.js",
+            "destination": "/prototype/chart-components.js"
+        },
+        {
+            "source": "/youtube-service.js",
+            "destination": "/prototype/youtube-service.js"
+        },
+        {
+            "source": "/",
+            "destination": "/prototype/index.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/prototype/$1"
+        }
+    ],
 
   "regions": ["iad1"],
   "env": {},
